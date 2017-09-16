@@ -26,7 +26,7 @@ public class QuerybuilderView implements MainView {
 
     private GridPane node;
 
-    private static final String TITLE = "QueryBuilder Client";
+    private static final String TITLE = "Query Builder Client";
 
     public QuerybuilderView() {
         final GridPane pane = new GridPane();
