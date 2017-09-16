@@ -10,6 +10,7 @@ import de.bildschirmarbeiter.application.message.spi.MessageService;
 import javafx.application.Platform;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 @Component(
@@ -29,6 +30,11 @@ public class Controller {
     @Activate
     private void activate() {
         messageService.register(this);
+    }
+
+    @Deactivate
+    private void deactivate() {
+        messageService.unregister(this);
     }
 
     @Subscribe
