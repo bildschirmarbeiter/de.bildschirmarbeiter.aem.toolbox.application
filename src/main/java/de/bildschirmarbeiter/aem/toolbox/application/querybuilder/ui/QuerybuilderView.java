@@ -24,7 +24,7 @@ public class QuerybuilderView implements MainView {
     @Reference
     private volatile ResultView resultView;
 
-    private GridPane node;
+    private final GridPane node;
 
     private static final String TITLE = "Query Builder Client";
 
