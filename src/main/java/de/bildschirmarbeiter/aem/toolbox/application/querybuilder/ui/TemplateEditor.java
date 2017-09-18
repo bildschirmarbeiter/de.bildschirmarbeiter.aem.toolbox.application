@@ -16,7 +16,7 @@ public class TemplateEditor extends VBox {
     @Reference
     private volatile QuerybuilderViewModel model;
 
-    private TextField editor;
+    private final TextField editor;
 
     public TemplateEditor() {
         setSpacing(10);
