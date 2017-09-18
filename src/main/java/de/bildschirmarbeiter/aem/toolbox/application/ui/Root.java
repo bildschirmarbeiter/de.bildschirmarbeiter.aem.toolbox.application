@@ -20,9 +20,9 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 )
 public class Root extends BorderPane {
 
-    private VBox container;
+    private final VBox container;
 
-    private TabPane tabPane;
+    private final TabPane tabPane;
 
     @Reference
     private volatile LogComponent logComponent;
@@ -38,10 +38,6 @@ public class Root extends BorderPane {
     private final Object lock = new Object();
 
     public Root() {
-        build();
-    }
-
-    private void build() {
         container = new VBox();
         container.prefHeightProperty().bind(heightProperty());
         container.prefWidthProperty().bind(widthProperty());
