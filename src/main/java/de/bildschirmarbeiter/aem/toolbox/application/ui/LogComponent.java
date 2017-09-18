@@ -18,18 +18,14 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class LogComponent extends HBox {
 
-    private Label message;
+    private final Label message;
 
-    private Label time;
+    private final Label time;
 
     @Reference
     private volatile MessageService messageService;
 
     public LogComponent() {
-        build();
-    }
-
-    private void build() {
         setPadding(new Insets(10, 10, 10, 10));
         setSpacing(10);
         final Label message = new Label();
