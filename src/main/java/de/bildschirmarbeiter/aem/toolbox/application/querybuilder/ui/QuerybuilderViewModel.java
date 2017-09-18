@@ -15,8 +15,10 @@ import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryR
 import de.bildschirmarbeiter.application.message.spi.MessageService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -83,9 +85,15 @@ public class QuerybuilderViewModel {
 
     // filter
 
-    final StringProperty filter = new SimpleStringProperty();
+    final StringProperty filterExpression = new SimpleStringProperty();
 
-    private final ChangeListener<String> filterChangeListener = (observable, oldValue, newValue) -> filteredResult.setPredicate(string -> newValue == null || newValue.isEmpty() || string.contains(newValue));
+    private final ChangeListener<String> filterExpressionChangeListener = (observable, oldValue, newValue) -> filteredResult.setPredicate(string -> filter(string, newValue));
+
+    final ObjectProperty<FilterMode> filterMode = new SimpleObjectProperty<>(FilterMode.CONTAINS);
+
+    private final ChangeListener<FilterMode> filterModeChangeListener = (observable, oldValue, newValue) -> filteredResult.setPredicate(string -> filter(string, filterExpression.getValue()));
+
+    final ObservableList<FilterMode> filterModes = FXCollections.observableArrayList(FilterMode.CONTAINS, FilterMode.MATCHES);
 
     public QuerybuilderViewModel() {
     }
@@ -94,14 +102,16 @@ public class QuerybuilderViewModel {
     private void activate() {
         compileTemplate();
         template.addListener(templateChangeListener);
-        filter.addListener(filterChangeListener);
+        filterExpression.addListener(filterExpressionChangeListener);
+        filterMode.addListener(filterModeChangeListener);
         messageService.register(this);
     }
 
     @Deactivate
     private void deactivate() {
         template.removeListener(templateChangeListener);
-        filter.removeListener(filterChangeListener);
+        filterExpression.removeListener(filterExpressionChangeListener);
+        filterMode.removeListener(filterModeChangeListener);
         messageService.unregister(this);
     }
 
@@ -152,6 +162,38 @@ public class QuerybuilderViewModel {
         offset.setValue(0);
         hits.clear();
         result.clear();
+    }
+
+    private boolean filter(final String string, final String filterExpression) {
+        if (string == null || string.isEmpty()) {
+            return false;
+        }
+        switch (filterMode.get()) {
+            case CONTAINS:
+                return string.contains(filterExpression);
+            case MATCHES:
+                return string.matches(filterExpression);
+            default:
+                return false;
+        }
+    }
+
+    enum FilterMode {
+
+        CONTAINS("Hit contains"),
+        MATCHES("Hit matches");
+
+        private final String title;
+
+        FilterMode(final String title) {
+            this.title = title;
+        }
+
+        @Override
+        public String toString() {
+            return title;
+        }
+
     }
 
 }
