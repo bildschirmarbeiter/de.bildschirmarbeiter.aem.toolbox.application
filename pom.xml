@@ -11,7 +11,7 @@
 
   <groupId>de.bildschirmarbeiter.aem.toolbox</groupId>
   <artifactId>de.bildschirmarbeiter.aem.toolbox.application</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2</version>
   <packaging>bundle</packaging>
 
   <name>Bildschirmarbeiter AEM Toolbox Application</name>
@@ -23,7 +23,7 @@
     <connection>scm:git:git://github.com/bildschirmarbeiter/de.bildschirmarbeiter.aem.toolbox.application.git</connection>
     <developerConnection>scm:git:git@github.com:bildschirmarbeiter/de.bildschirmarbeiter.aem.toolbox.application.git</developerConnection>
     <url>https://github.com/bildschirmarbeiter/de.bildschirmarbeiter.aem.toolbox.application/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>de.bildschirmarbeiter.aem.toolbox.application-0.0.2</tag>
   </scm>
 
   <build>
