@@ -13,7 +13,6 @@
   <groupId>de.bildschirmarbeiter.aem.toolbox</groupId>
   <artifactId>de.bildschirmarbeiter.aem.toolbox.application</artifactId>
   <version>0.0.3-SNAPSHOT</version>
-  <packaging>bundle</packaging>
 
   <name>Bildschirmarbeiter AEM Toolbox Application</name>
   <description>${project.name}</description>
@@ -30,14 +29,8 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Bundle-Activator>de.bildschirmarbeiter.aem.toolbox.application.Activator</Bundle-Activator>
-            <Export-Package />
-          </instructions>
-        </configuration>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

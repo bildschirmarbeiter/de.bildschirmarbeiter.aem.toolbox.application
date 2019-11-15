@@ -1,0 +1,13 @@
+Bundle-Activator: de.bildschirmarbeiter.aem.toolbox.application.Activator
+
+Bundle-Description: ${project.description}
+
+Bundle-DocURL: ${project.organization.url}
+
+Bundle-License: https://raw.githubusercontent.com/bildschirmarbeiter/de.bildschirmarbeiter.aem.toolbox.application/master/LICENSE.txt
+
+Bundle-Vendor: ${project.organization.name}
+
+-removeheaders:\
+  Include-Resource,\
+  Private-Package
