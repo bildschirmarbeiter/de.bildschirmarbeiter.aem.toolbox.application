@@ -6,7 +6,8 @@
   <parent>
     <groupId>de.bildschirmarbeiter.aem</groupId>
     <artifactId>aem-parent</artifactId>
-    <version>1</version>
+    <version>2</version>
+    <relativePath/>
   </parent>
 
   <groupId>de.bildschirmarbeiter.aem.toolbox</groupId>
