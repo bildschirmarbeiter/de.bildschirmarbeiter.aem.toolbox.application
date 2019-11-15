@@ -1,13 +1,14 @@
 package de.bildschirmarbeiter.aem.toolbox.application.ui;
 
-import com.google.common.eventbus.Subscribe;
-import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
-import de.bildschirmarbeiter.application.message.spi.MessageService;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+
+import com.google.common.eventbus.Subscribe;
+import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
+import de.bildschirmarbeiter.application.message.spi.MessageService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;

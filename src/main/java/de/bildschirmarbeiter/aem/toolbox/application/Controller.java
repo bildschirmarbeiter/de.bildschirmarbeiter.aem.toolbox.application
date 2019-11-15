@@ -1,5 +1,7 @@
 package de.bildschirmarbeiter.aem.toolbox.application;
 
+import javafx.application.Platform;
+
 import com.google.common.eventbus.Subscribe;
 import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryResult;
@@ -7,7 +9,6 @@ import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryService;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryCommand;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryResultEvent;
 import de.bildschirmarbeiter.application.message.spi.MessageService;
-import javafx.application.Platform;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;

@@ -1,12 +1,13 @@
 package de.bildschirmarbeiter.aem.toolbox.application.querybuilder.ui;
 
-import de.bildschirmarbeiter.aem.toolbox.application.system.ClipboardService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import de.bildschirmarbeiter.aem.toolbox.application.system.ClipboardService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;

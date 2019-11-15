@@ -1,12 +1,13 @@
 package de.bildschirmarbeiter.aem.toolbox.application.querybuilder.ui;
 
-import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.ui.QuerybuilderViewModel.FilterMode;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+
+import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.ui.QuerybuilderViewModel.FilterMode;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;

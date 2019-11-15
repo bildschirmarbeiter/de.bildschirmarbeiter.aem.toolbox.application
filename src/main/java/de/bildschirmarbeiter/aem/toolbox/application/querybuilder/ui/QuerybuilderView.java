@@ -1,10 +1,11 @@
 package de.bildschirmarbeiter.aem.toolbox.application.querybuilder.ui;
 
-import de.bildschirmarbeiter.aem.toolbox.application.ui.MainView;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+
+import de.bildschirmarbeiter.aem.toolbox.application.ui.MainView;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;

@@ -1,9 +1,10 @@
 package de.bildschirmarbeiter.aem.toolbox.application.system;
 
-import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
-import de.bildschirmarbeiter.application.message.spi.MessageService;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+
+import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
+import de.bildschirmarbeiter.application.message.spi.MessageService;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
