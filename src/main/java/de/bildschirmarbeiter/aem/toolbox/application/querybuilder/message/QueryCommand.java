@@ -6,8 +6,8 @@ public class QueryCommand extends AbstractServerCommand {
 
     private final String query;
 
-    public QueryCommand(final Object source, final String host, final String port, final String username, final String password, final String query) {
-        super(source, host, port, username, password);
+    public QueryCommand(final Object source, final String scheme, final String host, final String port, final String username, final String password, final String query) {
+        super(source, scheme, host, port, username, password);
         this.query = query;
     }
 

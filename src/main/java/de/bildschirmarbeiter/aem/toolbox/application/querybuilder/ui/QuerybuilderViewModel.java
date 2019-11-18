@@ -18,6 +18,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.SingleSelectionModel;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
@@ -44,6 +45,10 @@ public class QuerybuilderViewModel {
     private volatile MessageService messageService;
 
     // server
+    final ObservableList<String> schemes = FXCollections.observableArrayList("https", "http");
+
+    final StringProperty scheme = new SimpleStringProperty(schemes.get(0));
+
     final StringProperty host = new SimpleStringProperty("localhost");
 
     final StringProperty port = new SimpleStringProperty("4502");

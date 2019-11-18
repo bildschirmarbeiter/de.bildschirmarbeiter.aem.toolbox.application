@@ -26,12 +26,12 @@ public class QueryService {
     public QueryService() {
     }
 
-    public QueryResult query(final String host, final String port, final String username, final String password, final String query) {
+    public QueryResult query(final String scheme, final String host, final String port, final String username, final String password, final String query) {
         final HttpHost httpHost = new HttpHost(host);
         executor.auth(httpHost, username, password);
         try {
             final URIBuilder builder = new URIBuilder()
-                .setScheme("http") // TODO
+                .setScheme(scheme)
                 .setHost(host)
                 .setPort(Integer.parseInt(port)) // TODO
                 .setPath(QUERY_PATH);

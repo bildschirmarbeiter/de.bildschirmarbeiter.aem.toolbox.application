@@ -1,5 +1,6 @@
 package de.bildschirmarbeiter.aem.toolbox.application.querybuilder.ui;
 
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -19,6 +20,8 @@ public class ServerEditor extends VBox {
     @Reference
     private volatile QuerybuilderViewModel model;
 
+    private final ChoiceBox<String> schemes = new ChoiceBox<>();
+
     private final TextField host = new TextField();
 
     private final TextField port = new TextField();
@@ -37,6 +40,7 @@ public class ServerEditor extends VBox {
         final HBox fields = new HBox();
         fields.setSpacing(10);
         fields.getChildren().addAll(
+            schemes,
             host,
             port,
             username,
@@ -50,6 +54,8 @@ public class ServerEditor extends VBox {
 
     @Activate
     private void activate() {
+        schemes.setItems(model.schemes);
+        schemes.valueProperty().bindBidirectional(model.scheme);
         host.textProperty().bindBidirectional(model.host);
         port.textProperty().bindBidirectional(model.port);
         username.textProperty().bindBidirectional(model.username);
@@ -58,6 +64,7 @@ public class ServerEditor extends VBox {
 
     @Deactivate
     private void deactivate() {
+        schemes.valueProperty().unbindBidirectional(model.scheme);
         host.textProperty().unbindBidirectional(model.host);
         port.textProperty().unbindBidirectional(model.port);
         username.textProperty().unbindBidirectional(model.username);

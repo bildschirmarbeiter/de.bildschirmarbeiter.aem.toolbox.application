@@ -43,7 +43,7 @@ public class Controller {
         new Thread() {
             public void run() {
                 try {
-                    final QueryResult result = queryService.query(command.getHost(), command.getPort(), command.getUsername(), command.getPassword(), command.getQuery());
+                    final QueryResult result = queryService.query(command.getScheme(), command.getHost(), command.getPort(), command.getUsername(), command.getPassword(), command.getQuery());
                     final QueryResultEvent event = new QueryResultEvent(this, result);
                     sendMessage(event);
                     final String message = String.format("Query result received: %s", result);

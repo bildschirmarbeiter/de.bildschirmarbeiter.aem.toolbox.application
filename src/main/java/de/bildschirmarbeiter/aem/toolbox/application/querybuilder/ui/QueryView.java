@@ -67,12 +67,15 @@ public class QueryView extends VBox {
 
     // TODO
     private void query() {
+        final String scheme = model.scheme.get();
         final String host = model.host.get();
         final String port = model.port.get();
         final String username = model.username.get();
         final String password = model.password.get();
         final String query = model.query.get();
-        if (host == null) {
+        if (scheme == null) {
+            messageService.send(LogMessage.error(this, "scheme is null"));
+        } else if (host == null) {
             messageService.send(LogMessage.error(this, "host is null"));
         } else if (port == null) {
             messageService.send(LogMessage.error(this, "port is null"));
@@ -84,7 +87,7 @@ public class QueryView extends VBox {
             messageService.send(LogMessage.error(this, "query is null"));
         } else {
             messageService.send(LogMessage.info(this, String.format("running query on host %s", host)));
-            final QueryCommand command = new QueryCommand(this, host, port, username, password, query);
+            final QueryCommand command = new QueryCommand(this, scheme, host, port, username, password, query);
             messageService.send(command);
         }
     }
