@@ -49,17 +49,13 @@ public class FilterEditor extends VBox {
     private void activate() {
         editor.textProperty().bindBidirectional(model.filterExpression);
         filterModes.setItems(model.filterModes);
-        filterModes.setValue(model.filterMode.getValue());
-        model.filterMode.bind(filterModes.getSelectionModel().selectedItemProperty());
-
+        filterModes.valueProperty().bindBidirectional(model.filterMode);
     }
 
     @Deactivate
     private void deactivate() {
         editor.textProperty().unbindBidirectional(model.filterExpression);
-        filterModes.setItems(null);
-        filterModes.setValue(null);
-        model.filterMode.unbind();
+        filterModes.valueProperty().unbindBidirectional(model.filterMode);
     }
 
 }
