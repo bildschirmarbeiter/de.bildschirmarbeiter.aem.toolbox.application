@@ -33,13 +33,17 @@ public class ClipboardService {
         clipboard = null;
     }
 
+    public void copyToClipboard(final String string) {
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(string);
+        clipboard.setContent(content);
+        messageService.send(LogMessage.info(this, "content copied to clipboard"));
+    }
+
     public void copyToClipboard(final Iterable<String> strings) {
         final StringBuilder sb = new StringBuilder();
         strings.forEach(string -> sb.append(string).append("\n"));
-        final ClipboardContent content = new ClipboardContent();
-        content.putString(sb.toString());
-        clipboard.setContent(content);
-        messageService.send(LogMessage.info(this, "content copied to clipboard"));
+        copyToClipboard(sb.toString());
     }
 
 }
