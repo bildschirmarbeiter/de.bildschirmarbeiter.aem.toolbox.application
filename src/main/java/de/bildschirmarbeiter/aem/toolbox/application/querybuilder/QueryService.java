@@ -27,9 +27,6 @@ public class QueryService {
     private volatile CloseableHttpClient httpClient;
 
     @Reference
-    private volatile QueryResultParser resultParser;
-
-    @Reference
     private volatile MessageService messageService;
 
     private static final String QUERY_PATH = "/bin/querybuilder.json";
@@ -43,7 +40,7 @@ public class QueryService {
         return String.format("Basic %s", encoded);
     }
 
-    public QueryResult query(final String scheme, final String host, final String port, final String username, final String password, final String query) {
+    public String query(final String scheme, final String host, final String port, final String username, final String password, final String query) {
         try {
             final URIBuilder builder = new URIBuilder()
                 .setScheme(scheme)
@@ -65,8 +62,7 @@ public class QueryService {
 
             try (final CloseableHttpResponse response = httpClient.execute(httpGet)) {
                 final InputStream content = response.getEntity().getContent();
-                final String json = IOUtils.toString(content, StandardCharsets.UTF_8);
-                return resultParser.parseResult(json);
+                return IOUtils.toString(content, StandardCharsets.UTF_8);
             } finally {
                 httpGet.releaseConnection();
             }

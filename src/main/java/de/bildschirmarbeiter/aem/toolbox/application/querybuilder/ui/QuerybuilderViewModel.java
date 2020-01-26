@@ -18,13 +18,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.scene.control.SingleSelectionModel;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.google.common.eventbus.Subscribe;
 import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryResult;
+import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryResultParser;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryCommand;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryResultEvent;
 import de.bildschirmarbeiter.application.message.spi.MessageService;
@@ -40,6 +40,9 @@ public class QuerybuilderViewModel {
 
     @Reference
     private volatile Handlebars handlebars;
+
+    @Reference
+    private volatile QueryResultParser resultParser;
 
     @Reference
     private volatile MessageService messageService;
@@ -72,7 +75,7 @@ public class QuerybuilderViewModel {
 
     final LongProperty offset = new SimpleLongProperty();
 
-    private final List<Map> hits = new ArrayList<>();
+    private final List<Map<String, ?>> hits = new ArrayList<>();
 
     final ObservableList<String> result = FXCollections.observableArrayList();
 
@@ -129,7 +132,8 @@ public class QuerybuilderViewModel {
     @Subscribe
     public void onQueryResultEvent(final QueryResultEvent event) {
         clear();
-        final QueryResult queryResult = event.getQueryResult();
+        final String result = event.getQueryResult();
+        final QueryResult queryResult = resultParser.parseResult(result);
         success.setValue(queryResult.isSuccess());
         results.setValue(queryResult.getResults());
         total.setValue(queryResult.getTotal());

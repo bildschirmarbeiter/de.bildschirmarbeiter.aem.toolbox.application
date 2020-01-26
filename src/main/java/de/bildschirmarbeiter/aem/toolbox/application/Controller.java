@@ -4,7 +4,6 @@ import javafx.application.Platform;
 
 import com.google.common.eventbus.Subscribe;
 import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
-import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryResult;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryService;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryCommand;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryResultEvent;
@@ -43,7 +42,7 @@ public class Controller {
         new Thread() {
             public void run() {
                 try {
-                    final QueryResult result = queryService.query(command.getScheme(), command.getHost(), command.getPort(), command.getUsername(), command.getPassword(), command.getQuery());
+                    final String result = queryService.query(command.getScheme(), command.getHost(), command.getPort(), command.getUsername(), command.getPassword(), command.getQuery());
                     final QueryResultEvent event = new QueryResultEvent(this, result);
                     sendMessage(event);
                     final String message = String.format("Query result received: %s", result);

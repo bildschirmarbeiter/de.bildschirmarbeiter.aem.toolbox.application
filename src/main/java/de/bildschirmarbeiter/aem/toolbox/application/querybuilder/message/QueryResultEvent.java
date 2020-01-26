@@ -1,18 +1,17 @@
 package de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message;
 
-import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryResult;
 import de.bildschirmarbeiter.application.message.base.AbstractMessage;
 
 public class QueryResultEvent extends AbstractMessage {
 
-    private final QueryResult queryResult;
+    private final String queryResult;
 
-    public QueryResultEvent(final Object source, final QueryResult queryResult) {
+    public QueryResultEvent(final Object source, final String queryResult) {
         super(source);
         this.queryResult = queryResult;
     }
 
-    public QueryResult getQueryResult() {
+    public String getQueryResult() {
         return queryResult;
     }
 

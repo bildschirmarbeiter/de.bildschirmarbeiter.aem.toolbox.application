@@ -15,7 +15,7 @@ public class QueryResult {
 
     private long offset;
 
-    private List<Map> hits;
+    private List<Map<String, ?>> hits;
 
     public QueryResult() {
     }
@@ -40,7 +40,7 @@ public class QueryResult {
         return offset;
     }
 
-    public List<Map> getHits() {
+    public List<Map<String, ?>> getHits() {
         return hits;
     }
 
