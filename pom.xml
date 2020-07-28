@@ -6,7 +6,7 @@
   <parent>
     <groupId>de.bildschirmarbeiter.aem</groupId>
     <artifactId>aem-parent</artifactId>
-    <version>2</version>
+    <version>3</version>
     <relativePath/>
   </parent>
 
