@@ -3,7 +3,13 @@ package de.bildschirmarbeiter.aem.toolbox.application.querybuilder.ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
@@ -22,12 +28,17 @@ import javafx.collections.transformation.FilteredList;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.google.common.eventbus.Subscribe;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryResult;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryResultParser;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryCommand;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.message.QueryResultEvent;
 import de.bildschirmarbeiter.application.message.spi.MessageService;
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -65,6 +76,10 @@ public class QuerybuilderViewModel {
 
     // result
 
+    final StringProperty result = new SimpleStringProperty();
+
+    final ObservableList<String> lines = FXCollections.observableArrayList();
+
     final BooleanProperty success = new SimpleBooleanProperty();
 
     final LongProperty results = new SimpleLongProperty();
@@ -77,11 +92,11 @@ public class QuerybuilderViewModel {
 
     private final List<Map<String, ?>> hits = new ArrayList<>();
 
-    final ObservableList<String> result = FXCollections.observableArrayList();
+    final ObservableList<String> resultList = FXCollections.observableArrayList();
 
-    final FilteredList<String> filteredResult = new FilteredList<>(result);
+    final FilteredList<String> filteredResultList = new FilteredList<>(resultList);
 
-    // template
+    // templating
 
     final StringProperty template = new SimpleStringProperty("{{this}}");
 
@@ -92,17 +107,34 @@ public class QuerybuilderViewModel {
 
     private Template handlebarsTemplate;
 
-    // filter
+    // templating filter
 
     final StringProperty filterExpression = new SimpleStringProperty();
 
-    private final ChangeListener<String> filterExpressionChangeListener = (observable, oldValue, newValue) -> filteredResult.setPredicate(string -> filter(string, newValue));
+    private final ChangeListener<String> filterExpressionChangeListener = (observable, oldValue, newValue) -> filteredResultList.setPredicate(string -> filter(string, newValue));
 
     final ObjectProperty<FilterMode> filterMode = new SimpleObjectProperty<>(FilterMode.CONTAINS);
 
-    private final ChangeListener<FilterMode> filterModeChangeListener = (observable, oldValue, newValue) -> filteredResult.setPredicate(string -> filter(string, filterExpression.getValue()));
+    private final ChangeListener<FilterMode> filterModeChangeListener = (observable, oldValue, newValue) -> filteredResultList.setPredicate(string -> filter(string, filterExpression.getValue()));
 
     final ObservableList<FilterMode> filterModes = FXCollections.observableArrayList(FilterMode.CONTAINS, FilterMode.MATCHES);
+
+    // scripting
+    final private ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+
+    final StringProperty script = new SimpleStringProperty("var json = JSON.parse(result);\nJSON.stringify(json, null, 2);");
+
+    final StringProperty scriptOutput = new SimpleStringProperty();
+
+    private final ChangeListener<String> scriptChangeListener = (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        renderScript();
+    };
+
+    //
+
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    private final JsonParser jsonParser = new JsonParser();
 
     public QuerybuilderViewModel() {
     }
@@ -113,6 +145,7 @@ public class QuerybuilderViewModel {
         template.addListener(templateChangeListener);
         filterExpression.addListener(filterExpressionChangeListener);
         filterMode.addListener(filterModeChangeListener);
+        script.addListener(scriptChangeListener);
         messageService.register(this);
     }
 
@@ -121,6 +154,7 @@ public class QuerybuilderViewModel {
         template.removeListener(templateChangeListener);
         filterExpression.removeListener(filterExpressionChangeListener);
         filterMode.removeListener(filterModeChangeListener);
+        script.removeListener(scriptChangeListener);
         messageService.unregister(this);
     }
 
@@ -132,8 +166,20 @@ public class QuerybuilderViewModel {
     @Subscribe
     public void onQueryResultEvent(final QueryResultEvent event) {
         clear();
-        final String result = event.getQueryResult();
-        final QueryResult queryResult = resultParser.parseResult(result);
+        try {
+            final JsonObject jso = jsonParser.parse(event.getQueryResult()).getAsJsonObject();
+            final String json = gson.toJson(jso);
+            result.setValue(json);
+            final Scanner scanner = new Scanner(json);
+            final List<String> lines = new ArrayList<>();
+            while (scanner.hasNextLine()) {
+                lines.add(scanner.nextLine());
+            }
+            this.lines.addAll(lines);
+        } catch (Exception e) {
+            result.setValue(event.getQueryResult());
+        }
+        final QueryResult queryResult = resultParser.parseResult(event.getQueryResult());
         success.setValue(queryResult.isSuccess());
         results.setValue(queryResult.getResults());
         total.setValue(queryResult.getTotal());
@@ -141,6 +187,7 @@ public class QuerybuilderViewModel {
         offset.setValue(queryResult.getOffset());
         hits.addAll(queryResult.getHits());
         processHits();
+        renderScript();
     }
 
     private void compileTemplate() {
@@ -151,7 +198,7 @@ public class QuerybuilderViewModel {
         }
     }
 
-    private String renderHit(final Map hit) {
+    private String renderHit(final Map<String, ?> hit) {
         try {
             return handlebarsTemplate.apply(hit);
         } catch (Exception e) {
@@ -160,18 +207,36 @@ public class QuerybuilderViewModel {
     }
 
     private void processHits() {
-        result.clear();
-        result.addAll(hits.stream().map(this::renderHit).collect(Collectors.toList()));
+        resultList.clear();
+        resultList.addAll(hits.stream().map(this::renderHit).collect(Collectors.toList()));
+    }
+
+    private void renderScript() {
+        if (StringUtils.isNotEmpty(result.getValue()) && StringUtils.isNotEmpty(script.getValue())) {
+            final ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("javascript");
+            final Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
+            bindings.put("result", result.getValue());
+            try {
+                final String value = (String) scriptEngine.eval(script.getValue());
+                scriptOutput.setValue(value);
+            } catch (Exception e) {
+                scriptOutput.setValue(null);
+                messageService.send(LogMessage.error(this, e.getMessage()));
+            }
+        }
     }
 
     private void clear() {
+        result.setValue(null);
         success.setValue(false);
         results.setValue(0);
         total.setValue(0);
         more.setValue(false);
         offset.setValue(0);
         hits.clear();
-        result.clear();
+        resultList.clear();
+        lines.clear();
+        scriptOutput.setValue(null);
     }
 
     private boolean filter(final String string, final String filterExpression) {

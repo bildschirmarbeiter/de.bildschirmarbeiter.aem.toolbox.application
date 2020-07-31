@@ -7,8 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.SSLContext;
 
 import com.github.jknack.handlebars.Handlebars;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -31,20 +29,16 @@ public class Activator implements BundleActivator {
 
     private ServiceRegistration<Handlebars> handlebarsServiceRegistration;
 
-    private ServiceRegistration<Gson> gsonServiceRegistration;
-
     @Override
     public void start(final BundleContext bundleContext) throws Exception {
         closeableHttpClient = closeableHttpClient();
         closeableHttpClientServiceRegistration = bundleContext.registerService(CloseableHttpClient.class, closeableHttpClient, null);
         handlebarsServiceRegistration = bundleContext.registerService(Handlebars.class, handlebars(), null);
-        gsonServiceRegistration = bundleContext.registerService(Gson.class, gson(), null);
     }
 
     @Override
     public void stop(final BundleContext bundleContext) throws Exception {
         handlebarsServiceRegistration.unregister();
-        gsonServiceRegistration.unregister();
         closeableHttpClientServiceRegistration.unregister();
         closeableHttpClient.close();
     }
@@ -65,10 +59,6 @@ public class Activator implements BundleActivator {
 
     private Handlebars handlebars() {
         return new Handlebars();
-    }
-
-    private Gson gson() {
-        return new GsonBuilder().create();
     }
 
 }

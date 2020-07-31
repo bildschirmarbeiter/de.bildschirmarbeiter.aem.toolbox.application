@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 import de.bildschirmarbeiter.aem.toolbox.application.ui.MainView;
 import org.osgi.service.component.annotations.Activate;
@@ -25,6 +26,12 @@ public class QuerybuilderView implements MainView {
     @Reference
     private volatile ResultView resultView;
 
+    @Reference
+    private volatile TemplatingView templatingView;
+
+    @Reference
+    private volatile ScriptingView scriptingView;
+
     private final GridPane node;
 
     private static final String TITLE = "Query Builder Client";
@@ -42,8 +49,12 @@ public class QuerybuilderView implements MainView {
 
     @Activate
     private void activate() {
-        node.add(queryView, 0, 0);
-        node.add(resultView, 1, 0);
+        final VBox left = new VBox();
+        left.getChildren().addAll(queryView, resultView);
+        final VBox right = new VBox();
+        right.getChildren().addAll(templatingView, scriptingView);
+        node.add(left, 0, 0);
+        node.add(right, 1, 0);
     }
 
     @Deactivate

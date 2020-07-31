@@ -1,16 +1,15 @@
 package de.bildschirmarbeiter.aem.toolbox.application.querybuilder;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 @Component(
     service = QueryResultParser.class
 )
 public class QueryResultParser {
 
-    @Reference
-    private volatile Gson gson;
+    private final Gson gson = new GsonBuilder().create();
 
     public QueryResultParser() {
     }
