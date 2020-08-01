@@ -109,7 +109,7 @@ public class QuerybuilderViewModel {
 
     // templating filter
 
-    final StringProperty filterExpression = new SimpleStringProperty();
+    final StringProperty filterExpression = new SimpleStringProperty("");
 
     private final ChangeListener<String> filterExpressionChangeListener = (observable, oldValue, newValue) -> filteredResultList.setPredicate(string -> filter(string, newValue));
 
