@@ -43,10 +43,9 @@ public class Controller {
             public void run() {
                 try {
                     final String result = queryService.query(command.getScheme(), command.getHost(), command.getPort(), command.getUsername(), command.getPassword(), command.getQuery());
+                    sendMessage(LogMessage.info(this, "Query result received."));
                     final QueryResultEvent event = new QueryResultEvent(this, result);
                     sendMessage(event);
-                    final String message = String.format("Query result received: %s", result);
-                    sendMessage(LogMessage.info(this, message));
                 } catch (Exception e) {
                     sendMessage(LogMessage.error(this, e.getMessage()));
                 }
