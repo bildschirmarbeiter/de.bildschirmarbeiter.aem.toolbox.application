@@ -1,7 +1,5 @@
 package de.bildschirmarbeiter.aem.toolbox.application;
 
-import javafx.application.Platform;
-
 import com.google.common.eventbus.Subscribe;
 import de.bildschirmarbeiter.aem.toolbox.application.message.LogMessage;
 import de.bildschirmarbeiter.aem.toolbox.application.querybuilder.QueryService;
@@ -43,18 +41,14 @@ public class Controller {
             public void run() {
                 try {
                     final String result = queryService.query(command.getScheme(), command.getHost(), command.getPort(), command.getUsername(), command.getPassword(), command.getQuery());
-                    sendMessage(LogMessage.info(this, "Query result received."));
+                    messageService.send(LogMessage.info(this, "Query result received."));
                     final QueryResultEvent event = new QueryResultEvent(this, result);
-                    sendMessage(event);
+                    messageService.send(event);
                 } catch (Exception e) {
-                    sendMessage(LogMessage.error(this, e.getMessage()));
+                    messageService.send(LogMessage.error(this, e.getMessage()));
                 }
             }
         }.start();
-    }
-
-    private void sendMessage(final Object event) {
-        Platform.runLater(() -> messageService.send(event));
     }
 
 }
